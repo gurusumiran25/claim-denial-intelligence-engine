@@ -1,0 +1,13 @@
+# Week 1 core (add more as each week needs them)
+pandas>=2.1
+numpy>=1.26
+pyyaml>=6.0
+pyarrow>=14.0
+jupyter>=1.0
+matplotlib>=3.8
+seaborn>=0.13
+
+# Dev tooling
+pytest>=8.0
+ruff>=0.5
+pre-commit>=3.7

@@ -1,0 +1,17 @@
+[project]
+name = "claim-denial-intelligence-engine"
+version = "0.1.0"
+description = "End-to-end claim denial prediction, expected-loss ranking and RAG appeal copilot on synthetic healthcare claims"
+requires-python = ">=3.10"
+
+[tool.ruff]
+extend-exclude = ["*.ipynb"]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

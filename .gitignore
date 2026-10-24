@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+*.egg-info/
+
+# Data (never commit data; keep only .gitkeep)
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+*.csv
+*.parquet
+*.zip
+
+# Secrets / cloud
+service-account*.json
+.gcp/
+
+# ML artifacts
+mlruns/
+models/*.pkl
+models/*.joblib
+
+# dbt
+dbt_project/target/
+dbt_project/dbt_packages/
+dbt_project/logs/
+
+# OS / IDE
+.DS_Store
+.vscode/
+.idea/

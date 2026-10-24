@@ -1,0 +1,66 @@
+# Denial simulator rules, DRAFT v0.1 (Week 1). Refine in Week 2 after EDA.
+#
+# How labels are generated (see simulator/simulate_denials.py):
+#   logit(p_denial) = base_logit + sum(effect of every triggered rule) + provider_effect + noise
+#   is_denied ~ Bernoulli(p_denial)
+#   carc_code = code of the triggered rule with the largest effect (CO-16 if none triggered)
+#
+# IMPORTANT: this is SIMULATED data. State this clearly in the README.
+# `observable: false` rules depend on hidden attributes the model will never see,
+# which creates realistic irreducible noise so the model cannot just reverse-engineer the YAML.
+
+version: "0.1"
+seed: 42
+base_logit: -3.15         # tuned so overall denial rate is roughly 10 percent on toy data
+provider_effect_sd: 0.35  # some providers are just worse at billing
+noise_sd: 0.30            # claim-level randomness
+
+rules:
+  timely_filing:
+    carc: "CO-29"
+    description: "Claim filed after the payer filing deadline"
+    observable: true
+    effect: 3.0
+    params: {max_days_to_file: 90}
+
+  missing_authorization:
+    carc: "CO-197"
+    description: "Service needs prior authorization but none on file"
+    observable: true
+    effect: 2.6
+    params: {}
+
+  duplicate_claim:
+    carc: "CO-18"
+    description: "Same member, provider, service date and procedure already billed"
+    observable: true
+    effect: 3.2
+    params: {}
+
+  coverage_inactive:
+    carc: "CO-27"
+    description: "Service date after member coverage ended"
+    observable: true
+    effect: 3.4
+    params: {}
+
+  high_amount_review:
+    carc: "CO-50"
+    description: "High-dollar claim flagged as not medically necessary"
+    observable: true
+    effect: 1.1
+    params: {amount_quantile: 0.95}
+
+  dx_procedure_mismatch:
+    carc: "CO-11"
+    description: "Diagnosis not consistent with procedure (hidden coding error)"
+    observable: false
+    effect: 1.8
+    params: {rate: 0.04}
+
+  missing_information:
+    carc: "CO-16"
+    description: "Claim lacks required information (hidden data-entry gap)"
+    observable: false
+    effect: 1.5
+    params: {rate: 0.05}
