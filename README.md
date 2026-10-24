@@ -1,4 +1,5 @@
 # Claim Denial Intelligence Engine
+![Continuous integration workflow status badge for GitHub Actions](https://github.com/gurusumiran25/claim-denial-intelligence-engine/actions/workflows/ci.yml/badge.svg)
 
 > Predict which healthcare claims will be denied **before** submission, rank the work queue by **expected dollar loss**, explain **why**, and draft **policy-grounded appeal letters** with an LLM.
 
