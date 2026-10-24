@@ -1,0 +1,73 @@
+
+=== inpatient (DE1_0_2008_to_2010_Inpatient_Claims_Sample_1.csv) ===
+  rows: 66,773   unique CLM_ID: 66,705
+  duplicate CLM_ID rows: 68
+  SEGMENT values: {'1': 66705, '2': 68}
+  unique (CLM_ID, SEGMENT): 66,773
+  unique members: 37,780
+  unique PRVDR_NUM: 2,675
+  CLM_FROM_DT min/max: 20071127 / 20101230
+  null rate by column (%):
+    DESYNPUF_ID: 0.0
+    CLM_ID: 0.0
+    CLM_FROM_DT: 0.1
+    CLM_THRU_DT: 0.1
+    PRVDR_NUM: 0.0
+    CLM_PMT_AMT: 0.0
+    AT_PHYSN_NPI: 1.0
+    ICD9_DGNS_CD_1: 0.1
+    ICD9_PRCDR_CD_1: 42.7
+    HCPCS_CD_1: 100.0
+    SEGMENT: 0.0
+    CLM_DRG_CD: 0.0
+    CLM_UTLZTN_DAY_CNT: 0.1
+  CLM_PMT_AMT percentiles [0, 25, 50, 75, 90, 95, 99, 100]: [-8000.0, 4000.0, 7000.0, 11000.0, 19000.0, 29000.0, 57000.0, 57000.0]
+  CLM_PMT_AMT share equal to 0: 0.032   total: 639,260,180
+
+=== outpatient (DE1_0_2008_to_2010_Outpatient_Claims_Sample_1.csv) ===
+  rows: 790,790   unique CLM_ID: 779,815
+  duplicate CLM_ID rows: 10,975
+  SEGMENT values: {'1': 779537, '2': 11253}
+  unique (CLM_ID, SEGMENT): 790,790
+  unique members: 85,272
+  unique PRVDR_NUM: 6,294
+  CLM_FROM_DT min/max: 20071212 / 20101231
+  null rate by column (%):
+    DESYNPUF_ID: 0.0
+    CLM_ID: 0.0
+    CLM_FROM_DT: 1.4
+    CLM_THRU_DT: 1.4
+    PRVDR_NUM: 0.0
+    CLM_PMT_AMT: 0.0
+    AT_PHYSN_NPI: 2.2
+    ICD9_DGNS_CD_1: 0.7
+    ICD9_PRCDR_CD_1: 100.0
+    HCPCS_CD_1: 18.3
+    SEGMENT: 0.0
+  CLM_PMT_AMT percentiles [0, 25, 50, 75, 90, 95, 99, 100]: [-100.0, 40.0, 80.0, 200.0, 700.0, 1600.0, 3300.0, 3300.0]
+  CLM_PMT_AMT share equal to 0: 0.038   total: 224,524,710
+
+=== carrier (DE1_0_2008_to_2010_Carrier_Claims_Sample_1A.csv, DE1_0_2008_to_2010_Carrier_Claims_Sample_1B.csv) ===
+  rows: 4,741,335   unique CLM_ID: 4,741,335   duplicates: 0
+  unique members: 98,626
+  unique TAX_NUM_1: 232,675   unique PRF_PHYSN_NPI_1: 614,977
+  CLM_FROM_DT min/max: 20080101 / 20101231
+  null rate by column (%):
+    DESYNPUF_ID: 0.0
+    CLM_ID: 0.0
+    CLM_FROM_DT: 0.0
+    CLM_THRU_DT: 0.0
+    ICD9_DGNS_CD_1: 0.0
+    TAX_NUM_1: 0.0
+    PRF_PHYSN_NPI_1: 0.2
+  service lines used per claim (count of claims): {0: 32253, 1: 2766965, 2: 1014476, 3: 422019, 4: 207290, 5: 115980, 6: 83067, 7: 33955, 8: 21613, 9: 13871, 10: 9720, 11: 6067, 12: 5642, 13: 8417}
+  mean lines per claim: 1.87
+  sum(LINE_NCH_PMT_AMT_1..13) percentiles [0, 25, 50, 75, 90, 95, 99, 100]: [0.0, 20.0, 50.0, 90.0, 190.0, 320.0, 650.0, 6080.0]
+  sum(LINE_NCH_PMT_AMT_1..13) share equal to 0: 0.101   total: 414,603,690
+
+=== CLM_ID overlap across claim types (should be 0) ===
+  inpatient & outpatient: 0
+  inpatient & carrier:    0
+  outpatient & carrier:   0
+
+Total unique claims across types: 5,587,855
