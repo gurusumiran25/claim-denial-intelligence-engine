@@ -88,3 +88,8 @@ Format: ID, date, decision, why, alternatives considered. Add one entry for ever
 ### ADR-009 result (24 Oct 2026): rules v0.2 on the real table
 - CO-16 share fell to 30.3% (from 50.6%) and the oracle ROC-AUC is 0.850. Overall denial rate 9.99%; outpatient 14.5%, inpatient 13.8%, carrier 9.1%.
 - The duplicate rule fires on only 5 of 5,072,824 claims (CO-18 share 0.0%) because DE-SynPUF has no exact repeat claims. Decision: leave the rule in place, exclude CO-18 from the reason analysis, and say so in the README. Simulated resubmissions are a possible later addition.
+
+## ADR-011: Time-based split (PROPOSED, 2026-11-03)
+- **Decision:** Train on service dates in 2008 and 2009 (3,844,106 claims), validate on Jan to Jun 2010 (807,486), test on Jul to Dec 2010 (421,232). No random shuffling. Provider history and other history features use only earlier dates.
+- **Why:** This mirrors deployment, where the model scores future claims. The EDA shows volume and denial rate shifting over time (about 10.5% in 2008, 9.7% in 2009, 9.5% in 2010, with volume falling through 2010), so the late-2010 test set is a harder and more honest check.
+- **Risk:** The test period is smaller and has a different mix. Report metrics by claim type and by month.
