@@ -1,0 +1,52 @@
+
+=== inpatient ===
+rows by SEGMENT x (CLM_FROM_DT is null):
+null_from_dt  False  True
+SEGMENT
+1             66705      0
+2                 0     68
+segment 2 rows: 68; with a segment 1 partner: 68
+matched pairs: 68
+  share of pairs with identical DESYNPUF_ID: 1.000
+  share of pairs with identical PRVDR_NUM: 0.294
+  share of pairs with identical CLM_FROM_DT: 0.000
+  share of pairs with identical ICD9_DGNS_CD_1: 0.000
+  segment 1 CLM_PMT_AMT: mean 9564.2, median 7000.0
+    share zero 0.032, share negative 0.001
+  segment 2 CLM_PMT_AMT: mean 18789.7, median 12000.0
+    share zero 0.029, share negative 0.000
+  segment 2 null rate by column (%):
+    DESYNPUF_ID: 0.0
+    CLM_ID: 0.0
+    SEGMENT: 0.0
+    CLM_FROM_DT: 100.0
+    CLM_THRU_DT: 100.0
+    PRVDR_NUM: 0.0
+    CLM_PMT_AMT: 0.0
+    ICD9_DGNS_CD_1: 100.0
+
+=== outpatient ===
+rows by SEGMENT x (CLM_FROM_DT is null):
+null_from_dt   False  True
+SEGMENT
+1             779537      0
+2                  0  11253
+segment 2 rows: 11,253; with a segment 1 partner: 10,975
+matched pairs: 10,975
+  share of pairs with identical DESYNPUF_ID: 1.000
+  share of pairs with identical PRVDR_NUM: 0.303
+  share of pairs with identical CLM_FROM_DT: 0.000
+  share of pairs with identical ICD9_DGNS_CD_1: 0.000
+  segment 1 CLM_PMT_AMT: mean 268.5, median 70.0
+    share zero 0.038, share negative 0.003
+  segment 2 CLM_PMT_AMT: mean 1353.6, median 1500.0
+    share zero 0.019, share negative 0.000
+  segment 2 null rate by column (%):
+    DESYNPUF_ID: 0.0
+    CLM_ID: 0.0
+    SEGMENT: 0.0
+    CLM_FROM_DT: 100.0
+    CLM_THRU_DT: 100.0
+    PRVDR_NUM: 0.0
+    CLM_PMT_AMT: 0.0
+    ICD9_DGNS_CD_1: 49.7
