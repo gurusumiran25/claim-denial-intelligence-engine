@@ -59,18 +59,19 @@ The "F:" and "T:" prefixes keep facility and billing-entity IDs from colliding.
 - `coverage_active`: member appears in the beneficiary file for the claim year; inpatient needs BENE_HI_CVRAGE_TOT_MONS > 0; outpatient and carrier need BENE_SMI_CVRAGE_TOT_MONS > 0; BENE_DEATH_DT is empty or on/after from_dt
 - Chronic flags (SP_*) are yearly. Use the **previous year's** flags to avoid using information from later in the claim year.
 
-## F. Synthesized columns (not in the raw data)
+## F. Synthesized columns (not in the raw data; ADR-009)
 
 | Column | How it is made |
 |---|---|
-| days_to_file | seeded random distribution, documented in the simulator |
-| auth_required | rule based on claim type and amount, plus noise |
-| auth_on_file | seeded random, high probability when required |
+| days_to_file | lognormal, median 18 days, sigma 0.9, capped at 365, seeded |
+| auth_required | inpatient 90%; other claims when amount is above the claim-type 90th percentile, plus 3% at random |
+| auth_on_file | always true when not required; 85% when required |
 
-## G. Simulated outputs (`simulator/simulate_denials.py`)
+## G. Simulated outputs (`simulator/label_claims.py`, table `claim_labels`, one row per claim_id)
 
 | Column | Use |
 |---|---|
+| days_to_file, auth_required, auth_on_file | Features (observable at submission) |
 | is_denied | **Target** |
 | carc_code | Denial reason (root cause and RAG). Not a feature. |
 | denial_rule_id | LEAKAGE, never a feature |

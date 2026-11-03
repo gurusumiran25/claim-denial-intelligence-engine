@@ -28,6 +28,7 @@ def make_toy_claims(n: int = 20000, seed: int = 7) -> pd.DataFrame:
 
     n_prov, n_bene = 300, 3000
     procs = np.array([f"HCPCS_{i:03d}" for i in range(40)])
+    dx_codes = np.array([f"DX{i:03d}" for i in range(30)])
 
     auth_required = (claim_type == "inpatient") | (amount > np.quantile(amount, 0.9))
     auth_required = auth_required | (rng.random(n) < 0.05)
@@ -41,6 +42,8 @@ def make_toy_claims(n: int = 20000, seed: int = 7) -> pd.DataFrame:
             "claim_type": claim_type,
             "from_dt": from_dt,
             "procedure_code": rng.choice(procs, size=n),
+            "primary_dx": rng.choice(dx_codes, size=n),
+            "n_lines": np.minimum(rng.geometric(0.5, size=n), 13).astype("int16"),
             "amount": amount,
             "days_to_file": np.minimum(rng.exponential(25, size=n).round().astype(int), 365),
             "auth_required": auth_required,

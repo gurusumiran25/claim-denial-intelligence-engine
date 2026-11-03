@@ -1,0 +1,47 @@
+claim_labels report
+
+claims labeled: 5,072,824
+base_logit used: -3.458
+overall denial rate: 9.988%
+
+denial rate by claim type:
+                rate  denied   claims
+claim_type
+carrier     0.091385  389462  4261769
+inpatient   0.137827    8859    64276
+outpatient  0.145076  108340   746779
+
+denial reasons (share of denied claims):
+carc_code
+CO-16     0.3025
+CO-29     0.2398
+CO-197    0.1260
+CO-11     0.0829
+CO-4      0.0826
+CO-27     0.0606
+CO-50     0.0587
+CO-97     0.0468
+CO-18     0.0000
+
+dollars denied / total dollars: 17.808%
+days_to_file > 90: 3.63%
+auth required: 13.52%
+authorization missing: 2.03%
+coverage inactive: 0.79%
+
+claims triggering each rule (share of all claims):
+  timely_filing                184,368     3.63%
+  missing_authorization        103,047     2.03%
+  duplicate_claim                    5     0.00%
+  coverage_inactive             40,084     0.79%
+  high_amount_review           241,170     4.75%
+  dx_procedure_mismatch        202,960     4.00%
+  missing_information          151,981     3.00%
+  missing_procedure_code       183,860     3.62%
+  many_service_lines           353,189     6.96%
+
+oracle ROC-AUC (true probability vs label): 0.850
+  upper bound for any model; hidden rules, provider effects and noise sit inside it
+oracle top 10%: precision 0.566, recall 0.567
+
+wrote labels to data\processed\claim_labels.parquet

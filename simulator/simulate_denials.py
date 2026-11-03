@@ -1,8 +1,8 @@
 """Apply versioned denial rules to a claims table and produce simulated labels.
 
 Required input columns:
-    claim_id, bene_id, provider_id, claim_type, from_dt, procedure_code,
-    amount, days_to_file, auth_required, auth_on_file, coverage_active
+    claim_id, bene_id, provider_id, claim_type, from_dt, procedure_code, primary_dx,
+    n_lines, amount, days_to_file, auth_required, auth_on_file, coverage_active
 
 Output adds:
     is_denied, carc_code, denial_rule_id, p_denial_true
@@ -28,6 +28,8 @@ REQUIRED_COLUMNS = [
     "claim_type",
     "from_dt",
     "procedure_code",
+    "primary_dx",
+    "n_lines",
     "amount",
     "days_to_file",
     "auth_required",
@@ -55,14 +57,19 @@ def _trigger_matrix(df: pd.DataFrame, cfg: dict, rng: np.random.Generator) -> pd
 
     t["missing_authorization"] = df["auth_required"].astype(bool) & ~df["auth_on_file"].astype(bool)
 
-    dup_key = ["bene_id", "provider_id", "from_dt", "procedure_code"]
-    t["duplicate_claim"] = df.duplicated(subset=dup_key, keep="first")
+    dup_key = ["bene_id", "provider_id", "from_dt", "procedure_code", "primary_dx"]
+    known_procedure = df["procedure_code"].astype(str) != "UNKNOWN"
+    t["duplicate_claim"] = df.duplicated(subset=dup_key, keep="first") & known_procedure.to_numpy()
 
     t["coverage_inactive"] = ~df["coverage_active"].astype(bool)
 
     q = rules["high_amount_review"]["params"]["amount_quantile"]
-    cutoff = df.groupby("claim_type")["amount"].transform(lambda s: s.quantile(q))
+    cutoff = df.groupby("claim_type", observed=True)["amount"].transform(lambda s: s.quantile(q))
     t["high_amount_review"] = df["amount"] > cutoff
+
+    unknown = df["procedure_code"].astype(str) == "UNKNOWN"
+    t["missing_procedure_code"] = unknown & df["claim_type"].astype(str).ne("inpatient")
+    t["many_service_lines"] = df["n_lines"] >= rules["many_service_lines"]["params"]["min_lines"]
 
     t["dx_procedure_mismatch"] = (
         rng.random(len(df)) < rules["dx_procedure_mismatch"]["params"]["rate"]
@@ -71,7 +78,23 @@ def _trigger_matrix(df: pd.DataFrame, cfg: dict, rng: np.random.Generator) -> pd
     return t[list(rules.keys())]
 
 
-def simulate(df: pd.DataFrame, cfg: dict | None = None) -> pd.DataFrame:
+def solve_base_logit(logit_without_base: np.ndarray, target_rate: float) -> float:
+    """Find the base logit that makes the mean denial probability equal target_rate."""
+    lo, hi = -25.0, 10.0
+    for _ in range(60):
+        mid = (lo + hi) / 2
+        rate = (1.0 / (1.0 + np.exp(-(logit_without_base + mid)))).mean()
+        if rate < target_rate:
+            lo = mid
+        else:
+            hi = mid
+    return (lo + hi) / 2
+
+
+def simulate(
+    df: pd.DataFrame, cfg: dict | None = None, target_rate: float | None = None
+) -> pd.DataFrame:
+    """Simulate denial labels. If target_rate is given, base_logit is calibrated to hit it."""
     cfg = cfg or load_rules()
     missing = [c for c in REQUIRED_COLUMNS if c not in df.columns]
     if missing:
@@ -83,15 +106,15 @@ def simulate(df: pd.DataFrame, cfg: dict | None = None) -> pd.DataFrame:
 
     names = list(cfg["rules"].keys())
     effects = np.array([cfg["rules"][n]["effect"] for n in names])
-    logit = cfg["base_logit"] + triggers.to_numpy().astype(float) @ effects
+    logit0 = triggers.to_numpy().astype(float) @ effects
 
-    providers = out["provider_id"].astype(str).unique()
-    draws = rng.normal(0, cfg["provider_effect_sd"], len(providers))
-    prov_effect = dict(zip(providers, draws, strict=True))
-    logit = logit + out["provider_id"].astype(str).map(prov_effect).to_numpy()
-    logit = logit + rng.normal(0, cfg["noise_sd"], len(out))
+    codes, uniques = pd.factorize(out["provider_id"])
+    draws = rng.normal(0, cfg["provider_effect_sd"], len(uniques))
+    logit0 = logit0 + np.where(codes >= 0, draws[np.maximum(codes, 0)], 0.0)
+    logit0 = logit0 + rng.normal(0, cfg["noise_sd"], len(out))
 
-    p = 1.0 / (1.0 + np.exp(-logit))
+    base = solve_base_logit(logit0, target_rate) if target_rate else cfg["base_logit"]
+    p = 1.0 / (1.0 + np.exp(-(logit0 + base)))
     denied = rng.random(len(out)) < p
 
     weighted = triggers.to_numpy() * effects
@@ -101,10 +124,14 @@ def simulate(df: pd.DataFrame, cfg: dict | None = None) -> pd.DataFrame:
     carc_lookup = {n: cfg["rules"][n]["carc"] for n in names}
     carc_lookup["random_other"] = "CO-16"
 
+    rule_col = np.full(len(out), None, dtype=object)
+    rule_col[denied] = rule_ids[denied]
     out["p_denial_true"] = p
     out["is_denied"] = denied.astype(int)
-    out["denial_rule_id"] = np.where(denied, rule_ids, None)
+    out["denial_rule_id"] = rule_col
     out["carc_code"] = out["denial_rule_id"].map(carc_lookup)
+    out.attrs["base_logit"] = float(base)
+    out.attrs["trigger_counts"] = {n: int(c) for n, c in triggers.sum().items()}
     return out
 
 

@@ -47,3 +47,44 @@ def test_missing_columns_raises():
 
 def test_leakage_columns_declared(labeled):
     assert set(LEAKAGE_COLUMNS) <= set(labeled.columns)
+
+
+def _frame(rows):
+    base = dict(
+        claim_id="x",
+        bene_id="B1",
+        provider_id="F:1",
+        claim_type="outpatient",
+        from_dt=pd.Timestamp("2009-01-01"),
+        procedure_code="P1",
+        primary_dx="D1",
+        n_lines=1,
+        amount=100.0,
+        days_to_file=10,
+        auth_required=False,
+        auth_on_file=True,
+        coverage_active=True,
+    )
+    df = pd.DataFrame([{**base, **r} for r in rows])
+    df["claim_id"] = [f"C{i}" for i in range(len(df))]
+    return df
+
+
+def test_duplicate_rule_ignores_unknown_procedure():
+    known = simulate(_frame([{}, {}])).attrs["trigger_counts"]
+    unknown = simulate(_frame([{"procedure_code": "UNKNOWN"}] * 2)).attrs["trigger_counts"]
+    assert known["duplicate_claim"] == 1
+    assert unknown["duplicate_claim"] == 0
+
+
+def test_new_observable_rules_trigger():
+    df = _frame(
+        [
+            {"procedure_code": "UNKNOWN"},
+            {"procedure_code": "UNKNOWN", "claim_type": "inpatient"},
+            {"n_lines": 8, "bene_id": "B2"},
+        ]
+    )
+    counts = simulate(df).attrs["trigger_counts"]
+    assert counts["missing_procedure_code"] == 1  # inpatient is exempt
+    assert counts["many_service_lines"] == 1

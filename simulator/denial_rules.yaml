@@ -1,4 +1,7 @@
-# Denial simulator rules, DRAFT v0.1 (Week 1). Refine in Week 2 after EDA.
+# Denial simulator rules, v0.2 (24 Oct 2026). v0.1 left CO-16 at about 50% of denials and the
+# duplicate rule never fired on the real data, so two observable rules were added and the
+# duplicate key was tightened. Observable effects were then scaled up (x1.3) to raise the
+# learnable signal; the oracle ROC-AUC is printed in the label report. Re-check shares in docs/label_report.txt after each change.
 #
 # How labels are generated (see simulator/simulate_denials.py):
 #   logit(p_denial) = base_logit + sum(effect of every triggered rule) + provider_effect + noise
@@ -9,7 +12,7 @@
 # `observable: false` rules depend on hidden attributes the model will never see,
 # which creates realistic irreducible noise so the model cannot just reverse-engineer the YAML.
 
-version: "0.1"
+version: "0.2"
 seed: 42
 base_logit: -3.15         # tuned so overall denial rate is roughly 10 percent on toy data
 provider_effect_sd: 0.35  # some providers are just worse at billing
@@ -20,35 +23,35 @@ rules:
     carc: "CO-29"
     description: "Claim filed after the payer filing deadline"
     observable: true
-    effect: 3.0
+    effect: 3.9
     params: {max_days_to_file: 90}
 
   missing_authorization:
     carc: "CO-197"
     description: "Service needs prior authorization but none on file"
     observable: true
-    effect: 2.6
+    effect: 3.4
     params: {}
 
   duplicate_claim:
     carc: "CO-18"
     description: "Same member, provider, service date and procedure already billed"
     observable: true
-    effect: 3.2
+    effect: 4.2
     params: {}
 
   coverage_inactive:
     carc: "CO-27"
     description: "Service date after member coverage ended"
     observable: true
-    effect: 3.4
+    effect: 4.4
     params: {}
 
   high_amount_review:
     carc: "CO-50"
     description: "High-dollar claim flagged as not medically necessary"
     observable: true
-    effect: 1.1
+    effect: 1.4
     params: {amount_quantile: 0.95}
 
   dx_procedure_mismatch:
@@ -63,4 +66,18 @@ rules:
     description: "Claim lacks required information (hidden data-entry gap)"
     observable: false
     effect: 1.5
-    params: {rate: 0.05}
+    params: {rate: 0.03}
+
+  missing_procedure_code:
+    carc: "CO-4"
+    description: "Outpatient or carrier claim with no procedure code (inconsistent or missing code)"
+    observable: true
+    effect: 1.7
+    params: {}
+
+  many_service_lines:
+    carc: "CO-97"
+    description: "Many service lines on one claim, so some are bundled into another payment"
+    observable: true
+    effect: 1.3
+    params: {min_lines: 6}
