@@ -1,0 +1,18 @@
+claims_unified build report
+
+step                             inpatient    outpatient       carrier         total
+raw_rows                            66,773       790,790     4,741,335     5,598,898
+dropped_segment2                        68        11,253             0        11,321
+dropped_bad_date                         0             0             0             0
+dropped_outside_window                 224           312             0           536
+dropped_amount_missing                   0             0             0             0
+dropped_amount_negative                 55         2,561             0         2,616
+dropped_amount_zero                  2,150        29,885       479,566       511,601
+kept                                64,276       746,779     4,261,769     5,072,824
+not_in_beneficiary_file                  0             0             0             0
+coverage_inactive                      465         5,993        33,626        40,084
+duplicate_claim_ids                      0             0             0             0
+
+wrote 5,072,824 claims to data\processed\claims_unified.parquet
+coverage_active = False for 0.8% of kept claims
+member not in that year's beneficiary file: 0.0% of kept claims
