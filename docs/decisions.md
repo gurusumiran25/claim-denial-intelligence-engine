@@ -99,3 +99,9 @@ Format: ID, date, decision, why, alternatives considered. Add one entry for ever
 - **Why:** Denial outcomes arrive after submission, so a provider's yesterday is not known today. The EDA showed provider rates are noisy at small volumes, so shrinkage is needed.
 - **Checks:** 48 dbt tests, including brute-force recomputation of the history windows on a sample of claims and a guard against label columns in the feature table.
 - **Limits:** 2008 claims have no prior-year chronic counts, and the first 120 days of 2008 have no provider history.
+
+## ADR-012: Leakage-safe feature design in dbt (2026-11-05)
+- **Decision:** Features in `fct_claim_features` use only information available before the service date. Provider denial history covers a 90-day window that ends 30 days before the claim (the feedback lag), is smoothed toward a fixed 10% prior with the weight of 50 claims, and falls back to the prior when there is no history. Member history excludes the current day. Chronic condition counts come from the previous year. `claim_year` is kept as a time column but is not a feature. `carc_code` and the simulator's hidden columns never enter the feature table.
+- **Why:** Denial outcomes arrive after submission, so a provider's yesterday is not known today. The EDA showed provider rates are noisy at small volumes, so shrinkage is needed.
+- **Checks:** 48 dbt tests, including brute-force recomputation of the history windows on a sample of claims and a guard against label columns in the feature table.
+- **Limits:** 2008 claims have no prior-year chronic counts, and the first 120 days of 2008 have no provider history.
