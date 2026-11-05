@@ -1,0 +1,100 @@
+version: 2
+
+models:
+  - name: fct_claim_features
+    description: >
+      One row per claim with model-ready features, the target (is_denied) and the time split.
+      History features use only earlier dates; provider history also respects a feedback lag (ADR-012).
+    columns:
+      - name: claim_id
+        description: Claim key. Role id.
+        tests:
+          - unique
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_claims')
+                field: claim_id
+      - name: bene_id
+        description: Member id. Role id (not a feature).
+      - name: provider_id
+        description: Provider id ("F:" facility, "T:" carrier tax number). Role id (not a feature).
+      - name: from_dt
+        description: Service date. Role time.
+        tests: [not_null]
+      - name: claim_year
+        description: Service year. Role time (not a feature, to avoid learning the year).
+      - name: day_index
+        description: Days since 2008-01-01. Role time.
+      - name: split
+        description: "train (to 2009-12-31), valid (Jan to Jun 2010), test (Jul to Dec 2010)."
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["train", "valid", "test"]
+      - name: claim_type
+        description: inpatient, outpatient or carrier. Role feature.
+        tests: [not_null]
+      - name: amount
+        description: Medicare payment amount used as claim value. Role feature.
+        tests: [not_null]
+      - name: amount_log
+        description: Natural log of amount. Role feature.
+      - name: n_lines
+        description: Number of service lines. Role feature.
+      - name: procedure_unknown
+        description: 1 when no procedure code is available. Role feature.
+      - name: dx_group
+        description: First three characters of the primary diagnosis (ICD-9 category). Role feature.
+      - name: drg_code
+        description: Inpatient DRG, null for other claim types. Role feature.
+      - name: los_days
+        description: Inpatient length of stay, null for other claim types. Role feature.
+      - name: claim_month
+        description: Calendar month of service. Role feature.
+      - name: age_at_claim
+        description: Member age at the service date. Role feature.
+      - name: sex
+        description: Member sex code. Role feature.
+      - name: coverage_active
+        description: 1 when the member had coverage on the service date (from beneficiary files). Role feature.
+        tests: [not_null]
+      - name: chronic_count_prior_year
+        description: Chronic conditions in the previous calendar year; null for 2008 claims. Role feature.
+      - name: member_claims_prior_90d
+        description: Member claims in the 90 days before the service date, excluding the date itself. Role feature.
+      - name: days_to_file
+        description: Synthesized filing lag in days. Role feature.
+        tests: [not_null]
+      - name: auth_required
+        description: Synthesized, 1 when the service needs authorization. Role feature.
+        tests: [not_null]
+      - name: auth_on_file
+        description: Synthesized, 1 when authorization is on file. Role feature.
+        tests: [not_null]
+      - name: provider_prior_claims
+        description: Provider claims in the history window (ends feedback_lag_days before the day). Role feature.
+      - name: provider_prior_denied
+        description: Provider denied claims in the same window. Role feature.
+      - name: provider_claims_prior_30d
+        description: Provider claims in the 30 days before the day, excluding the day itself. Role feature.
+      - name: provider_denial_rate_smoothed
+        description: Provider denial rate shrunk toward the prior rate. Falls back to the prior with no history. Role feature.
+        tests: [not_null]
+      - name: is_denied
+        description: Target, 1 when the claim is denied (simulated). Role target.
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [0, 1]
+                quote: false
+
+  - name: fct_denied_claims
+    description: Denied claims with reason codes, for root-cause analysis.
+    columns:
+      - name: claim_id
+        tests: [unique, not_null]
+      - name: carc_code
+        tests: [not_null]

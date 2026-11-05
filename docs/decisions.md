@@ -93,3 +93,9 @@ Format: ID, date, decision, why, alternatives considered. Add one entry for ever
 - **Decision:** Train on service dates in 2008 and 2009 (3,844,106 claims), validate on Jan to Jun 2010 (807,486), test on Jul to Dec 2010 (421,232). No random shuffling. Provider history and other history features use only earlier dates.
 - **Why:** This mirrors deployment, where the model scores future claims. The EDA shows volume and denial rate shifting over time (about 10.5% in 2008, 9.7% in 2009, 9.5% in 2010, with volume falling through 2010), so the late-2010 test set is a harder and more honest check.
 - **Risk:** The test period is smaller and has a different mix. Report metrics by claim type and by month.
+
+## ADR-012: Leakage-safe feature design in dbt (2026-11-05)
+- **Decision:** Features in `fct_claim_features` use only information available before the service date. Provider denial history covers a 90-day window that ends 30 days before the claim (the feedback lag), is smoothed toward a fixed 10% prior with the weight of 50 claims, and falls back to the prior when there is no history. Member history excludes the current day. Chronic condition counts come from the previous year. `claim_year` is kept as a time column but is not a feature. `carc_code` and the simulator's hidden columns never enter the feature table.
+- **Why:** Denial outcomes arrive after submission, so a provider's yesterday is not known today. The EDA showed provider rates are noisy at small volumes, so shrinkage is needed.
+- **Checks:** 48 dbt tests, including brute-force recomputation of the history windows on a sample of claims and a guard against label columns in the feature table.
+- **Limits:** 2008 claims have no prior-year chronic counts, and the first 120 days of 2008 have no provider history.

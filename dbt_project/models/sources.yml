@@ -1,0 +1,66 @@
+version: 2
+
+sources:
+  - name: claims_dw
+    description: Tables loaded into BigQuery from the Python pipeline (ADR-010).
+    tables:
+      - name: claims_unified
+        description: One row per claim, cleaned per ADR-007 and ADR-008.
+        columns:
+          - name: claim_id
+            tests: [unique, not_null]
+          - name: claim_type
+            tests:
+              - not_null
+              - accepted_values:
+                  arguments:
+                    values: ["inpatient", "outpatient", "carrier"]
+          - name: bene_id
+            tests: [not_null]
+          - name: provider_id
+            description: One claim in the real data has no provider. Staging maps it to 'UNKNOWN'.
+            tests:
+              - not_null:
+                  config:
+                    severity: warn
+          - name: from_dt
+            tests: [not_null]
+          - name: amount
+            tests: [not_null]
+      - name: claim_labels
+        description: Simulated denial labels and synthesized submission fields, keyed by claim_id (ADR-009).
+        columns:
+          - name: claim_id
+            tests:
+              - unique
+              - not_null
+              - relationships:
+                  arguments:
+                    to: source('claims_dw', 'claims_unified')
+                    field: claim_id
+          - name: is_denied
+            tests:
+              - not_null
+              - accepted_values:
+                  arguments:
+                    values: [0, 1]
+                    quote: false
+      - name: bene_year
+        description: One row per member per year from the beneficiary summary files.
+        columns:
+          - name: bene_id
+            tests: [not_null]
+          - name: year
+            tests:
+              - not_null
+              - accepted_values:
+                  arguments:
+                    values: [2008, 2009, 2010]
+                    quote: false
+          - name: sp_diabetes
+            description: Chronic condition flag. Coded 1 = condition present, 2 = not (check against the CMS codebook).
+            tests:
+              - accepted_values:
+                  arguments:
+                    values: [1, 2]
+                    quote: false

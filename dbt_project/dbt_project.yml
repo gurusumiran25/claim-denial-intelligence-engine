@@ -1,0 +1,33 @@
+name: claim_denial
+version: "1.0.0"
+config-version: 2
+profile: claim_denial
+
+model-paths: ["models"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+target-path: "target"
+clean-targets: ["target", "dbt_packages"]
+
+vars:
+  # Provider history: look at the 90 days that END 30 days before the service date.
+  # The 30-day gap models the delay before a denial outcome is known (ADR-012).
+  history_days: 90
+  feedback_lag_days: 30
+  # Smoothing: add this many "virtual" claims at the prior denial rate (shrinks small samples).
+  smoothing_strength: 50
+  prior_denial_rate: 0.10
+  # Member history window (claims only, no labels, so no feedback lag needed).
+  member_history_days: 90
+  # Time split (ADR-011).
+  train_end: "2009-12-31"
+  valid_end: "2010-06-30"
+
+models:
+  claim_denial:
+    staging:
+      +materialized: view
+    intermediate:
+      +materialized: table
+    marts:
+      +materialized: table

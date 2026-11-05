@@ -1,0 +1,18 @@
+version: 2
+
+models:
+  - name: stg_claims
+    description: Claims with calendar fields and an integer day index.
+    columns:
+      - name: claim_id
+        tests: [unique, not_null]
+  - name: stg_claim_labels
+    description: Labels and submission fields. Leakage columns are excluded on purpose.
+    columns:
+      - name: claim_id
+        tests: [unique, not_null]
+  - name: stg_bene_year
+    description: Member-year attributes with a chronic condition count.
+    columns:
+      - name: bene_id
+        tests: [not_null]

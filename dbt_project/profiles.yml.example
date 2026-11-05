@@ -1,0 +1,12 @@
+# Copy to ~/.dbt/profiles.yml (Windows: %USERPROFILE%\.dbt\profiles.yml) and set your project ID.
+# Authentication uses your gcloud login (run: gcloud auth application-default login).
+claim_denial:
+  target: dev
+  outputs:
+    dev:
+      type: bigquery
+      method: oauth
+      project: YOUR_PROJECT_ID
+      dataset: claims_analytics
+      location: US
+      threads: 4
