@@ -12,9 +12,11 @@ venv/
 # Data (never commit data; keep only .gitkeep)
 data/raw/*
 data/processed/*
+data/bigquery/*
 !data/raw/.gitkeep
 !data/processed/.gitkeep
 *.csv
+!reports/*.csv
 *.parquet
 *.zip
 
@@ -22,10 +24,10 @@ data/processed/*
 service-account*.json
 .gcp/
 
-# ML artifacts
+# ML artifacts (trained models are rebuilt or published separately)
 mlruns/
-models/*.pkl
-models/*.joblib
+models/*
+!models/.gitkeep
 
 # dbt
 dbt_project/target/

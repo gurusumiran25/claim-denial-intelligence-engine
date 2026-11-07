@@ -105,3 +105,8 @@ Format: ID, date, decision, why, alternatives considered. Add one entry for ever
 - **Why:** Denial outcomes arrive after submission, so a provider's yesterday is not known today. The EDA showed provider rates are noisy at small volumes, so shrinkage is needed.
 - **Checks:** 48 dbt tests, including brute-force recomputation of the history windows on a sample of claims and a guard against label columns in the feature table.
 - **Limits:** 2008 claims have no prior-year chronic counts, and the first 120 days of 2008 have no provider history.
+
+## ADR-013: Modeling approach (PROPOSED, 2026-11-06)
+- **Decision:** Compare a constant base rate, a claim-type rate, logistic regression and LightGBM on the ADR-011 time split. Early stopping uses the validation period, calibration is fitted on validation, and test is used only for final numbers. Calibration uses Platt scaling because isotonic regression created ties and lowered PR-AUC. SHAP values come from LightGBM's built-in TreeSHAP. The review queue is ranked by expected loss (probability x amount) and compared with ranking by probability. Experiments are tracked in `reports/run_log.csv` instead of MLflow, whose dependencies risk conflicting with dbt in the same environment.
+- **Assumptions to revisit:** review cost of $10 per claim and a 50% fix rate for caught denials are placeholders.
+- **Reference points:** the oracle ROC-AUC of 0.850 from the label report is the ceiling for any model.

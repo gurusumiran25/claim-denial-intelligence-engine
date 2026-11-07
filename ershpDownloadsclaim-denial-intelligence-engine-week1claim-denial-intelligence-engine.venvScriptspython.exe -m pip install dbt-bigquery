@@ -1,0 +1,8 @@
+[33mcommit f6c3c4bad79bb953517d747e1dbaf956282304af[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: M Guru Sumiran <145713644+gurusumiran25@users.noreply.github.com>
+Date:   Thu Nov 5 17:42:50 2026 +0530
+
+    feat: dbt feature layer with leakage-safe history features and tests
+
+ docs/decisions.md | 6 [32m++++++[m
+ 1 file changed, 6 insertions(+)
