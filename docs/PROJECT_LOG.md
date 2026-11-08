@@ -158,3 +158,9 @@ See `docs/eda_findings.md` (9 findings). Headlines:
 ## 11. How this log is maintained
 
 At each milestone the log gets an appended block (a short entry for the findings, numbers and decisions of that step). Everything in the repo's `docs/` folder is the source of truth.
+
+## Update 8 Nov 2026: Weeks 3 and 4
+- **Week 3 (dbt):** the feature table `fct_claim_features` is built in BigQuery with 21 leakage-safe features; split counts match ADR-011 exactly. Bugs fixed on the way: numeric accepted-values tests needed `quote: false` on BigQuery, and one claim with a null provider is mapped to UNKNOWN.
+- **Week 4 (model):** LightGBM beats logistic regression and the constant baselines, reaches about 89% of the oracle's PR-AUC and 94% of its recall at 10%, is stable from validation to test, and is well calibrated. Expected-loss ranking catches 90% of denied dollars in the top 10% (74% by probability). See `docs/model_card.md` and `reports/model_report.md`.
+- **Lessons:** isotonic calibration created ties and lowered PR-AUC, so Platt scaling is used. MLflow was skipped in favor of `reports/run_log.csv` to avoid dependency conflicts with dbt.
+- **Progress:** about 55%. Next: Week 5 (root-cause analysis and the RAG appeal copilot).
