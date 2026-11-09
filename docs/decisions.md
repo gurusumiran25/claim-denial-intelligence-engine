@@ -125,3 +125,7 @@ Format: ID, date, decision, why, alternatives considered. Add one entry for ever
 - Dropping `dx_group` and `drg_code` from LightGBM gave test ROC-AUC 0.7828 (full model 0.7819), PR-AUC 0.4967 (0.4960), recall at top 10% 0.5206 (0.5203) and raw calibration error 0.0014 (0.0022), with 185 trees instead of 167. The differences are very small: read it as "no worse and simpler", not as a gain. Decision: the final model uses the remaining 19 features.
 - Caveat: the simulated labels do not depend on diagnosis or DRG by design, so this result is specific to them. With real payer data those fields would likely matter and should be tested again.
 - Training is reproducible: repeated full-model runs with the same seed gave identical scores.
+
+### ADR-013 decision on calibration (2026-11-09)
+- Final model (19 features, test period): ROC-AUC 0.7828, PR-AUC 0.4967, recall at top 10% 0.5206. Calibration error is 0.0014 raw and 0.0016 after Platt scaling, so Platt scaling gives no benefit here. Decision: the API and app use the raw LightGBM probabilities; the calibrator stays in the training pipeline for monitoring and for future data.
+- Review queue with the final model: ranking by expected loss catches 90% of denied dollars in the top 10% of claims, against 72% when ranked by probability (net benefit $7.20M vs $5.64M under the placeholder assumptions).
