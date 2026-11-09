@@ -120,3 +120,8 @@ Format: ID, date, decision, why, alternatives considered. Add one entry for ever
 - **Decision:** The project must run end to end on a fresh clone with no paid or expiring accounts. (1) The appeal copilot uses local retrieval (TF-IDF) and template drafting by default; an LLM is an optional plug-in switched on by an environment variable and never required. (2) BigQuery and dbt-bigquery stay as the documented cloud path, and the same dbt models also run locally on DuckDB. (3) The deployed app uses packaged model files and sample data, with no live warehouse calls. (4) Dependencies are pinned in `requirements-lock.txt`. (5) Policy excerpts are stored in the repo with their source and date.
 - **Why:** The earlier API key expired after one month, BigQuery sandbox tables expire after 60 days, and cloud logins time out.
 - **Consequence:** Letters are a little plainer than LLM output, but the repo and the demo keep working indefinitely.
+
+### ADR-013 ablation (2026-11-09)
+- Dropping `dx_group` and `drg_code` from LightGBM gave test ROC-AUC 0.7828 (full model 0.7819), PR-AUC 0.4967 (0.4960), recall at top 10% 0.5206 (0.5203) and raw calibration error 0.0014 (0.0022), with 185 trees instead of 167. The differences are very small: read it as "no worse and simpler", not as a gain. Decision: the final model uses the remaining 19 features.
+- Caveat: the simulated labels do not depend on diagnosis or DRG by design, so this result is specific to them. With real payer data those fields would likely matter and should be tested again.
+- Training is reproducible: repeated full-model runs with the same seed gave identical scores.

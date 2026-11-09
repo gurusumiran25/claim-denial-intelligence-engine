@@ -1,8 +1,12 @@
+import json
+import sys
+
 import numpy as np
 import pandas as pd
 import pytest
 
 from src.training import features as F
+from src.training import train as train_module
 from src.training.calibration import PlattCalibrator
 from src.training.metrics import (
     basic_metrics,
@@ -165,3 +169,35 @@ def test_end_to_end_training(tmp_path):
         "dx_group"
         not in (tmp_path / "models" / "feature_spec.json").read_text().split("categories")[0]
     )
+
+
+def test_cli_drop_flag_reaches_training(tmp_path, monkeypatch):
+    """The --drop option on the command line must change the model that is trained."""
+    feats = tmp_path / "features.parquet"
+    make_features(12000).to_parquet(feats, index=False)
+    argv = [
+        "train",
+        "--features",
+        str(feats),
+        "--labels",
+        str(tmp_path / "none.parquet"),
+        "--reports",
+        str(tmp_path / "r"),
+        "--models",
+        str(tmp_path / "m"),
+        "--n-estimators",
+        "20",
+        "--lr-rows",
+        "4000",
+        "--shap-rows",
+        "200",
+        "--drop",
+        "dx_group,drg_code",
+    ]
+    monkeypatch.setattr(sys, "argv", argv)
+    train_module.main()
+    spec = json.loads((tmp_path / "m" / "feature_spec.json").read_text())
+    assert "dx_group" not in spec["features"] and "drg_code" not in spec["features"]
+    assert len(spec["features"]) == 19
+    log = pd.read_csv(tmp_path / "r" / "run_log.csv")
+    assert log.loc[0, "dropped"] == "dx_group,drg_code"

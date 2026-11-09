@@ -402,6 +402,7 @@ def main() -> None:
         a.review_cost,
         a.fix_rate,
         a.seed,
+        drop=tuple(c.strip() for c in a.drop.split(",") if c.strip()),
     )
 
 

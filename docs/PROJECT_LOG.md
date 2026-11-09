@@ -164,3 +164,8 @@ At each milestone the log gets an appended block (a short entry for the findings
 - **Week 4 (model):** LightGBM beats logistic regression and the constant baselines, reaches about 89% of the oracle's PR-AUC and 94% of its recall at 10%, is stable from validation to test, and is well calibrated. Expected-loss ranking catches 90% of denied dollars in the top 10% (74% by probability). See `docs/model_card.md` and `reports/model_report.md`.
 - **Lessons:** isotonic calibration created ties and lowered PR-AUC, so Platt scaling is used. MLflow was skipped in favor of `reports/run_log.csv` to avoid dependency conflicts with dbt.
 - **Progress:** about 55%. Next: Week 5 (root-cause analysis and the RAG appeal copilot).
+
+## Update 9 Nov 2026: final model
+- Ablation without the diagnosis group and DRG features scored the same or slightly better (ROC-AUC 0.7828 vs 0.7819, PR-AUC 0.4967 vs 0.4960), so the final LightGBM uses 19 features (ADR-013). Full-feature report kept as `reports/model_report_full_features.md`.
+- A bug found on the way: the command-line `--drop` option was read but not passed to the training function, so the first "ablation" silently ran the full model. A test now runs the real command-line entry point.
+- Progress: about 62%. Next: Week 5 (root-cause analysis and the offline appeal copilot).

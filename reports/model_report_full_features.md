@@ -1,6 +1,6 @@
 # Model report
 
-Generated 2026-11-08T12:44:35 (commit a3cdb1a). Labels are simulated (ADR-001), so scores show how well patterns are recovered, not how a real payer behaves.
+Generated 2026-11-08T12:21:11 (commit 6154b96). Labels are simulated (ADR-001), so scores show how well patterns are recovered, not how a real payer behaves.
 
 ## Data split (ADR-011)
 - train 3,844,106 claims, valid 807,486, test 421,232
