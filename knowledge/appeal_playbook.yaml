@@ -1,0 +1,229 @@
+# Appeal playbook: what to do for each denial reason, and which arguments the facts can support.
+#
+# default_action: appeal | corrected_claim | no_appeal
+# action_rules:   checked in order; the first rule whose `when` holds replaces the default action
+# arguments:      only used when the action is "appeal"; each needs its `when` condition to hold
+# guidance:       steps shown when the action is corrected_claim or no_appeal (each step is cited)
+# `when` is a condition name, "not:name", or a list of names that must all hold.
+# Facts the system cannot know (documentation_available, exception_documented, modifier_documented,
+# eligibility_confirmed_active) default to false and must be supplied by a person.
+#
+# NOTE: reason-code names follow the simulator's mapping (ADR-009). Real CARC definitions differ slightly:
+# for example CARC 4 is about modifiers, while a missing procedure code is usually reason 16 with remark M51.
+
+CO-29:
+  title: Timely filing
+  meaning: The claim was received after the filing deadline.
+  default_action: appeal
+  root_cause: {category: Late submission, owner: Billing office, fixability: preventable,
+               prevention: ["Track days from service to submission and alert at 30 and 60 days", "Work rejected claims within 5 days so resubmission stays inside the limit"]}
+  action_rules:
+    - when: filed_after_medicare_limit_without_exception
+      action: no_appeal
+      reason: The claim was filed after the general 12-month Medicare limit and no exception has been documented.
+  arguments:
+    - id: ARG-TIMELY-WITHIN-LIMIT
+      when: filed_within_medicare_limit
+      statement: >-
+        The claim was submitted {days_to_file} days after the date of service, which is inside the general
+        Medicare filing limit of 12 months.
+      query: medicare timely filing limit 12 months after date of service
+      evidence: ["Clearinghouse or payer acceptance report showing the submission date",
+                 "Remittance advice showing the denial date"]
+    - id: ARG-TIMELY-EXCEPTION
+      when: exception_documented
+      statement: >-
+        A recognized exception to the filing limit applies to this claim, and the supporting documentation is
+        enclosed.
+      query: timely filing exception administrative error retroactive entitlement documentation
+      evidence: ["Documentation of the exception (for example the retroactive entitlement notice or the administrative error)"]
+  guidance:
+    - {text: "Check whether a filing-limit exception applies (retroactive entitlement, administrative error) and gather the documentation.",
+       query: timely filing exception administrative error retroactive entitlement}
+    - {text: "A timely-filing denial is usually handled by an exception request, not a standard appeal.",
+       query: untimely filing denial not an initial determination exception request}
+  checklist:
+    - Confirm the payer's own filing limit in the contract; if it is shorter than 12 months, replace the general Medicare limit in the letter.
+    - Attach proof of the original submission date.
+
+CO-197:
+  title: Prior authorization missing
+  meaning: The service needed prior authorization and none was on file when the claim was processed.
+  default_action: appeal
+  root_cause: {category: Authorization not obtained, owner: Front desk and scheduling, fixability: preventable,
+               prevention: ["Check authorization requirements at scheduling", "Block claim release when a required authorization is missing"]}
+  action_rules: []
+  arguments:
+    - id: ARG-AUTH-ON-FILE
+      when: authorization_on_file
+      statement: >-
+        An authorization for this service was on file, and the authorization record is enclosed with this request.
+      query: prior authorization decision on file before claim submission
+      evidence: ["Authorization approval letter or tracking number"]
+    - id: ARG-AUTH-NOT-REQUIRED
+      when: authorization_not_required
+      statement: >-
+        Our records show this service did not require prior authorization, so the denial for missing
+        authorization should be reversed.
+      query: prior authorization applies only to services named in the program
+      evidence: ["Payer authorization list or contract page showing the service is not on the authorization list"]
+    - id: ARG-AUTH-CLINICAL-REVIEW
+      when: [authorization_missing, documentation_available]
+      statement: >-
+        No authorization was on file at submission. We ask that the claim be reviewed on its clinical merits;
+        the enclosed medical record shows the service was reasonable and necessary.
+      query: medical necessity documentation reasonable and necessary supports service after authorization denial
+      evidence: ["Medical record supporting the service", "Any authorization request or retrospective review request"]
+  guidance:
+    - {text: "Obtain the authorization record, or the medical record that supports the service, before appealing.",
+       query: documentation supporting medical necessity medical record}
+    - {text: "Confirm that the service really requires authorization under the payer's program; many services do not.",
+       query: prior authorization applies only to specific services named in each program}
+    - {text: "If an authorization request was refused, it can usually be corrected and resubmitted before the claim is denied.",
+       query: non-affirmation resubmit prior authorization request}
+  checklist:
+    - Confirm the payer's authorization rules for this service type.
+    - Attach the authorization number or the clinical record.
+
+CO-50:
+  title: Medical necessity
+  meaning: The payer decided the service was not medically necessary based on the information it had.
+  default_action: appeal
+  root_cause: {category: Documentation does not support necessity, owner: Clinical documentation, fixability: correctable,
+               prevention: ["Make sure notes state the clinical indication", "Send the supporting record when the claim is high value"]}
+  action_rules: []
+  arguments:
+    - id: ARG-NECESSITY-RECORDS
+      when: documentation_available
+      statement: >-
+        The enclosed medical record documents the clinical indication for this service and shows it was
+        reasonable and necessary for the patient's condition.
+      query: reasonable and necessary medical necessity documentation medical record legible signature
+      evidence: ["Signed, legible medical record showing the indication and the service rendered"]
+  guidance:
+    - {text: "Collect the complete medical record for the date of service before appealing; a necessity denial is decided from the records sent.",
+       query: documentation needed to support medical necessity medical record complete legible}
+    - {text: "Check the record shows a covered condition, that the service was performed, and that it is signed.",
+       query: medicare reasonable and necessary standard covered indication}
+  checklist:
+    - Check signatures and dates on every page of the record.
+    - Cite the applicable coverage policy if one exists.
+
+CO-97:
+  title: Bundled service
+  meaning: Payment for this service is included in the payment for another service on the claim.
+  default_action: appeal
+  root_cause: {category: Coding and bundling, owner: Coding team, fixability: correctable,
+               prevention: ["Run NCCI edits in the claim scrubber before submission", "Review modifier use on multi-line claims"]}
+  action_rules:
+    - when: "not:modifier_documented"
+      action: corrected_claim
+      reason: A bundling denial is normally fixed by a coding review and a corrected claim, unless a distinct-service modifier is documented.
+  arguments:
+    - id: ARG-NCCI-MODIFIER
+      when: modifier_documented
+      statement: >-
+        The services were distinct and separately documented, and an appropriate NCCI-associated modifier
+        applies to the bundled code.
+      query: NCCI modifier indicator distinct service exception documentation supports modifier
+      evidence: ["Medical record showing the services were separate", "NCCI edit lookup showing a modifier indicator of 1"]
+  guidance:
+    - {text: "Look up the code pair in the NCCI edits and read its modifier indicator before deciding what to do.",
+       query: NCCI modifier indicator 0 1 9 bundled code pair}
+    - {text: "If no exception applies, correct the claim; if one applies, make sure the record documents it.",
+       query: NCCI bundling column one column two edit denied unless exception}
+  checklist:
+    - Confirm the NCCI modifier indicator for the code pair.
+
+CO-16:
+  title: Claim lacks required information
+  meaning: The claim was missing information needed to process it.
+  default_action: corrected_claim
+  root_cause: {category: Missing or invalid claim data, owner: Registration and billing, fixability: preventable,
+               prevention: ["Add required-field checks to the claim scrubber", "Validate identifiers at registration"]}
+  action_rules: []
+  arguments: []
+  guidance:
+    - {text: "Do not file an appeal: Medicare treats a claim with missing or invalid information as unprocessable, with no appeal rights.",
+       query: unprocessable claim missing information no appeal rights submit new claim}
+    - {text: "Correct the missing fields and submit a new claim; appealing only delays payment and risks a timely-filing denial.",
+       query: appeal unprocessable claim delays payment timely filing resubmit corrected claim}
+  checklist:
+    - Read the remark code to find the missing field.
+    - Resubmit within the filing limit.
+
+CO-4:
+  title: Procedure code problem
+  meaning: The procedure code is missing, or inconsistent with a modifier.
+  default_action: corrected_claim
+  root_cause: {category: Coding error, owner: Coding team, fixability: preventable,
+               prevention: ["Require a procedure code on every outpatient and professional line", "Check modifier rules in the scrubber"]}
+  action_rules: []
+  arguments: []
+  guidance:
+    - {text: "Fix the procedure code or modifier and submit a corrected claim; this is not an appeal situation.",
+       query: missing invalid procedure code submit new claim corrected complete information}
+    - {text: "Reason code 4 means the code is inconsistent with the modifier, or a required modifier is missing.",
+       query: reason code 4 procedure code inconsistent with modifier required modifier missing}
+  checklist:
+    - Confirm the code is valid for the date of service.
+
+CO-11:
+  title: Diagnosis inconsistent with procedure
+  meaning: The diagnosis on the claim does not support the procedure billed.
+  default_action: corrected_claim
+  root_cause: {category: Coding error, owner: Coding team, fixability: correctable,
+               prevention: ["Add diagnosis-to-procedure checks to the scrubber", "Coder review of high-volume codes"]}
+  action_rules: []
+  arguments: []
+  guidance:
+    - {text: "If the diagnosis was entered wrongly, correct it through a clerical-error reopening instead of an appeal.",
+       query: clerical error reopening transposed diagnosis code correct claim}
+    - {text: "A reopening is available within one year for any reason, and up to four years with good cause.",
+       query: reopening one year any reason four years good cause}
+  checklist:
+    - Have a coder review the diagnosis against the record.
+
+CO-27:
+  title: Coverage ended or inactive
+  meaning: The patient was not covered on the date of service.
+  default_action: no_appeal
+  root_cause: {category: Eligibility not verified, owner: Registration, fixability: preventable,
+               prevention: ["Verify eligibility on the day of service", "Re-verify before billing for long stays"]}
+  action_rules:
+    - when: eligibility_confirmed_active
+      action: appeal
+      reason: An eligibility response shows coverage on the date of service.
+  warnings:
+    - when: coverage_active
+      text: Your own data shows coverage active on the date of service, which conflicts with this denial; confirm with an eligibility response.
+  arguments:
+    - id: ARG-ELIG-ACTIVE
+      when: eligibility_confirmed_active
+      statement: >-
+        The enclosed eligibility response shows the patient had active coverage on the date of service.
+      query: verify eligibility entitlement dates HETS eligibility response coverage on date of service
+      evidence: ["Eligibility response (for example a HETS 271 response) covering the date of service"]
+  guidance:
+    - {text: "Run an eligibility check for the date of service; if coverage was active, attach the response and appeal.",
+       query: verify eligibility HETS before billing entitlement dates}
+    - {text: "If coverage was not active, bill the correct payer or the patient instead of appealing.",
+       query: claim not covered by this payer send to correct payer}
+  checklist:
+    - Save the eligibility response with the claim.
+
+CO-18:
+  title: Duplicate claim
+  meaning: The payer considers this claim a duplicate of one already received.
+  default_action: no_appeal
+  root_cause: {category: Duplicate submission, owner: Billing office, fixability: preventable,
+               prevention: ["Check claim status before resubmitting", "Use the clearinghouse duplicate check"]}
+  action_rules: []
+  arguments: []
+  guidance:
+    - {text: "Confirm whether an earlier claim for the same service was paid; if so, no action is needed.",
+       query: duplicate claim denial check status earlier claim}
+    - {text: "If the claim was wrongly treated as a duplicate, request a reopening with the duplicate reason.",
+       query: incorrectly identified duplicate reopening reason}
+  checklist:
+    - Compare the claim with the earlier submission.

@@ -1,0 +1,68 @@
+# Evaluation cases for the appeal copilot (30 hand-written cases).
+# expect_action: what the copilot should recommend.   expect_arguments: argument ids that must be used (appeal only).
+# gold_notes: the primary policy notes a good retrieval should surface in the top 3 for the case's queries.
+# acceptable_notes: other notes a reviewer would also accept as relevant (assigned after inspecting retrieval output,
+#   so these labels are not fully independent of the system; see the evaluation report).
+# must_not_contain: phrases that would be an unsupported claim if they appeared in the document.
+- {id: T01, reason: CO-29, facts: {claim_id: "9001", claim_type: carrier, from_dt: "2010-02-10", amount: 85.0, days_to_file: 45},
+   expect_action: appeal, expect_arguments: [ARG-TIMELY-WITHIN-LIMIT], gold_notes: [PN-TIMELY-01]}
+- {id: T02, reason: CO-29, facts: {claim_id: "9002", claim_type: outpatient, from_dt: "2009-06-01", amount: 410.0, days_to_file: 120},
+   expect_action: appeal, expect_arguments: [ARG-TIMELY-WITHIN-LIMIT], gold_notes: [PN-TIMELY-01]}
+- {id: T03, reason: CO-29, facts: {claim_id: "9003", claim_type: inpatient, from_dt: "2008-11-20", amount: 9500.0, days_to_file: 400},
+   expect_action: no_appeal, gold_notes: [PN-TIMELY-02]}
+- {id: T04, reason: CO-29, facts: {claim_id: "9004", claim_type: carrier, from_dt: "2009-01-15", amount: 60.0, days_to_file: 400, exception_documented: true},
+   expect_action: appeal, expect_arguments: [ARG-TIMELY-EXCEPTION], gold_notes: [PN-TIMELY-02],
+   must_not_contain: ["inside the general Medicare filing limit"]}
+- {id: T05, reason: CO-29, facts: {claim_id: "9005", claim_type: inpatient, from_dt: "2010-04-02", amount: 12000.0, days_to_file: 91},
+   expect_action: appeal, expect_arguments: [ARG-TIMELY-WITHIN-LIMIT], gold_notes: [PN-TIMELY-01]}
+- {id: T06, reason: CO-197, facts: {claim_id: "9006", claim_type: inpatient, from_dt: "2009-03-03", amount: 15000.0, days_to_file: 20, auth_required: true, auth_on_file: false},
+   expect_action: no_appeal, gold_notes: [PN-PA-01, PN-NECESS-02], acceptable_notes: [PN-PA-01, PN-NECESS-02, PN-PA-02, PN-NECESS-01]}
+- {id: T07, reason: CO-197, facts: {claim_id: "9007", claim_type: inpatient, from_dt: "2009-07-07", amount: 8200.0, days_to_file: 30, auth_required: true, auth_on_file: false, documentation_available: true},
+   expect_action: appeal, expect_arguments: [ARG-AUTH-CLINICAL-REVIEW], gold_notes: [PN-NECESS-01, PN-NECESS-02],
+   must_not_contain: ["authorization for this service was on file"]}
+- {id: T08, reason: CO-197, facts: {claim_id: "9008", claim_type: outpatient, from_dt: "2010-01-19", amount: 1500.0, days_to_file: 12, auth_required: true, auth_on_file: true},
+   expect_action: appeal, expect_arguments: [ARG-AUTH-ON-FILE], gold_notes: [PN-PA-01]}
+- {id: T09, reason: CO-197, facts: {claim_id: "9009", claim_type: carrier, from_dt: "2010-05-05", amount: 140.0, days_to_file: 9, auth_required: false},
+   expect_action: appeal, expect_arguments: [ARG-AUTH-NOT-REQUIRED], gold_notes: [PN-PA-01]}
+- {id: T10, reason: CO-197, facts: {claim_id: "9010", claim_type: outpatient, from_dt: "2008-08-08", amount: 2900.0, days_to_file: 33, auth_required: true, auth_on_file: false, documentation_available: true},
+   expect_action: appeal, expect_arguments: [ARG-AUTH-CLINICAL-REVIEW], gold_notes: [PN-NECESS-02], acceptable_notes: [PN-NECESS-01, PN-NECESS-02]}
+- {id: T11, reason: CO-50, facts: {claim_id: "9011", claim_type: outpatient, from_dt: "2009-09-09", amount: 2100.0, days_to_file: 18, documentation_available: true},
+   expect_action: appeal, expect_arguments: [ARG-NECESSITY-RECORDS], gold_notes: [PN-NECESS-01, PN-NECESS-02]}
+- {id: T12, reason: CO-50, facts: {claim_id: "9012", claim_type: outpatient, from_dt: "2009-10-10", amount: 1800.0, days_to_file: 22},
+   expect_action: no_appeal, gold_notes: [PN-NECESS-02], acceptable_notes: [PN-NECESS-02, PN-NECESS-01]}
+- {id: T13, reason: CO-50, facts: {claim_id: "9013", claim_type: inpatient, from_dt: "2010-02-02", amount: 31000.0, days_to_file: 14, documentation_available: true},
+   expect_action: appeal, expect_arguments: [ARG-NECESSITY-RECORDS], gold_notes: [PN-NECESS-01], acceptable_notes: [PN-NECESS-01, PN-NECESS-02]}
+- {id: T14, reason: CO-50, facts: {claim_id: "9014", claim_type: carrier, from_dt: "2008-12-12", amount: 650.0, days_to_file: 7},
+   expect_action: no_appeal, gold_notes: [PN-NECESS-02, PN-NECESS-01]}
+- {id: T15, reason: CO-97, facts: {claim_id: "9015", claim_type: carrier, from_dt: "2009-04-04", amount: 310.0, days_to_file: 10, n_lines: 8, modifier_documented: true},
+   expect_action: appeal, expect_arguments: [ARG-NCCI-MODIFIER], gold_notes: [PN-NCCI-02, PN-NCCI-01]}
+- {id: T16, reason: CO-97, facts: {claim_id: "9016", claim_type: carrier, from_dt: "2009-05-05", amount: 270.0, days_to_file: 11, n_lines: 7},
+   expect_action: corrected_claim, gold_notes: [PN-NCCI-01, PN-NCCI-02]}
+- {id: T17, reason: CO-97, facts: {claim_id: "9017", claim_type: outpatient, from_dt: "2010-06-06", amount: 880.0, days_to_file: 25, n_lines: 12},
+   expect_action: corrected_claim, gold_notes: [PN-NCCI-01], acceptable_notes: [PN-NCCI-01, PN-NCCI-02]}
+- {id: T18, reason: CO-16, facts: {claim_id: "9018", claim_type: carrier, from_dt: "2008-03-03", amount: 55.0, days_to_file: 6},
+   expect_action: corrected_claim, gold_notes: [PN-UNPROC-01, PN-UNPROC-02]}
+- {id: T19, reason: CO-16, facts: {claim_id: "9019", claim_type: outpatient, from_dt: "2009-11-11", amount: 240.0, days_to_file: 15},
+   expect_action: corrected_claim, gold_notes: [PN-UNPROC-01, PN-UNPROC-02]}
+- {id: T20, reason: CO-16, facts: {claim_id: "9020", claim_type: inpatient, from_dt: "2010-08-08", amount: 7600.0, days_to_file: 40},
+   expect_action: corrected_claim, gold_notes: [PN-UNPROC-01], acceptable_notes: [PN-UNPROC-01, PN-UNPROC-02, PN-UNPROC-03]}
+- {id: T21, reason: CO-4, facts: {claim_id: "9021", claim_type: outpatient, from_dt: "2009-02-02", amount: 130.0, days_to_file: 5, procedure_unknown: true},
+   expect_action: corrected_claim, gold_notes: [PN-UNPROC-03, PN-CARC4-01]}
+- {id: T22, reason: CO-4, facts: {claim_id: "9022", claim_type: carrier, from_dt: "2010-09-09", amount: 45.0, days_to_file: 3, procedure_unknown: true},
+   expect_action: corrected_claim, gold_notes: [PN-UNPROC-03, PN-CARC4-01]}
+- {id: T23, reason: CO-4, facts: {claim_id: "9023", claim_type: outpatient, from_dt: "2008-07-07", amount: 95.0, days_to_file: 21, procedure_unknown: true},
+   expect_action: corrected_claim, gold_notes: [PN-CARC4-01], acceptable_notes: [PN-CARC4-01, PN-UNPROC-03]}
+- {id: T24, reason: CO-11, facts: {claim_id: "9024", claim_type: outpatient, from_dt: "2009-08-18", amount: 360.0, days_to_file: 13},
+   expect_action: corrected_claim, gold_notes: [PN-REOPEN-01, PN-REOPEN-02]}
+- {id: T25, reason: CO-11, facts: {claim_id: "9025", claim_type: carrier, from_dt: "2010-03-03", amount: 72.0, days_to_file: 8},
+   expect_action: corrected_claim, gold_notes: [PN-REOPEN-01], acceptable_notes: [PN-REOPEN-01, PN-REOPEN-02]}
+- {id: T26, reason: CO-27, facts: {claim_id: "9026", claim_type: carrier, from_dt: "2009-12-12", amount: 99.0, days_to_file: 14, coverage_active: false},
+   expect_action: no_appeal, gold_notes: [PN-ELIG-01, PN-ROUTE-01]}
+- {id: T27, reason: CO-27, facts: {claim_id: "9027", claim_type: inpatient, from_dt: "2008-05-15", amount: 18000.0, days_to_file: 26, coverage_active: false, eligibility_confirmed_active: true},
+   expect_action: appeal, expect_arguments: [ARG-ELIG-ACTIVE], gold_notes: [PN-ELIG-01]}
+- {id: T28, reason: CO-27, facts: {claim_id: "9028", claim_type: outpatient, from_dt: "2010-07-27", amount: 540.0, days_to_file: 19, coverage_active: true},
+   expect_action: no_appeal, gold_notes: [PN-ELIG-01], acceptable_notes: [PN-ELIG-01, PN-ROUTE-01]}
+- {id: T29, reason: CO-18, facts: {claim_id: "9029", claim_type: carrier, from_dt: "2009-09-30", amount: 120.0, days_to_file: 9},
+   expect_action: no_appeal, gold_notes: [PN-DUP-01]}
+- {id: T30, reason: CO-18, facts: {claim_id: "9030", claim_type: outpatient, from_dt: "2010-10-10", amount: 330.0, days_to_file: 12},
+   expect_action: no_appeal, gold_notes: [PN-DUP-01]}

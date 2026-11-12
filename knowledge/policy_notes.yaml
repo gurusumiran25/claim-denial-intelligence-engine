@@ -1,0 +1,236 @@
+# Policy knowledge base for the appeal copilot.
+# Each note is a SHORT PARAPHRASED SUMMARY of public Medicare Fee-for-Service guidance, with links to the
+# original sources (accessed 2026-11-09). These are summaries, not legal text: verify at the source before
+# relying on them, and replace them with the payer's own contract terms where those differ.
+- id: PN-TIMELY-01
+  title: Medicare timely filing limit
+  keywords: [timely filing, filing limit, late claim, 12 months, one calendar year, date of service, untimely, CO-29]
+  text: >-
+    Medicare fee-for-service claims must reach the claims processing contractor no later than 12 months
+    (one calendar year) after the date of service. For Part B and professional claims the "from" date of
+    service starts the clock; for Part A institutional claims the "through" date is used. A claim received
+    after the deadline is denied for untimely filing.
+  sources:
+    - {title: "CGS Medicare: Part A timely filing", url: "https://cgsmedicare.com/parta/claims/timely.html"}
+    - {title: "First Coast: timely filing requirements", url: "https://medicare.fcso.com/node/5026"}
+    - {title: "CMS Transmittal 12909, Claims Processing Manual Chapter 1", url: "https://cms.gov/files/document/r12909cp.pdf"}
+  accessed: "2026-11-09"
+- id: PN-TIMELY-02
+  title: Exceptions to the timely filing limit
+  keywords: [timely filing exception, administrative error, retroactive entitlement, extension, good cause, Medicaid recoupment, late filing]
+  text: >-
+    The Claims Processing Manual allows limited and specific exceptions that extend the 12-month limit,
+    such as retroactive Medicare entitlement, a State Medicaid agency recouping payment six months or more
+    after the service, and administrative error. Each exception request is evaluated individually and must
+    be supported by documentation. A denial for untimely filing is not treated as an initial determination,
+    so the usual appeal route does not apply and an exception request is the normal path.
+  sources:
+    - {title: "CGS Medicare: Part A timely filing", url: "https://cgsmedicare.com/parta/claims/timely.html"}
+    - {title: "CGS Medicare: timely filing and exceptions", url: "https://cgsmedicare.com/articles/cope18411.html"}
+    - {title: "Palmetto GBA: checklist for timely filing extension", url: "https://palmettogba.com/palmetto/rr.nsf/DID/9V4QN80733"}
+  accessed: "2026-11-09"
+- id: PN-APPEAL-01
+  title: First-level appeal (redetermination) timing
+  keywords: [appeal, redetermination, 120 days, deadline, first level, remittance advice, decision 60 days, request]
+  text: >-
+    The first appeal level for Original Medicare is a redetermination by the Medicare Administrative
+    Contractor. The request must be filed within 120 days of receiving the initial determination (the
+    remittance advice or Medicare Summary Notice), and the contractor generally issues a decision within
+    60 days of receiving the request.
+  sources:
+    - {title: "CMS: first level of appeal, redetermination", url: "https://www.cms.gov/medicare/appeals-grievances/fee-for-service/first-level-appeal-redetermination-medicare-contractor"}
+    - {title: "CMS MLN booklet: Medicare Parts A and B appeals process", url: "https://www.cms.gov/files/document/mln006562-medicare-parts-b-appeals-process.pdf"}
+  accessed: "2026-11-09"
+- id: PN-APPEAL-02
+  title: Later appeal levels
+  keywords: [reconsideration, QIC, 180 days, five levels, second level, appeal levels, ALJ]
+  text: >-
+    Original Medicare has five appeal levels. After a redetermination, a request for reconsideration by a
+    Qualified Independent Contractor must be filed within 180 days of receiving the redetermination
+    decision. Later levels include an administrative law judge hearing, the Appeals Council and federal
+    court review.
+  sources:
+    - {title: "CGS Medicare: levels of appeals", url: "https://cgsmedicare.com/hhh/appeals/level_of_appeals.html"}
+    - {title: "CMS MLN booklet: Medicare Parts A and B appeals process", url: "https://www.cms.gov/files/document/mln006562-medicare-parts-b-appeals-process.pdf"}
+  accessed: "2026-11-09"
+- id: PN-APPEAL-03
+  title: Submit supporting documentation with the appeal
+  keywords: [documentation, supporting documents, evidence, enclosures, appeal request, medical records, attach]
+  text: >-
+    When requesting a redetermination, the appellant should send all relevant documentation that supports
+    the argument that the initial claim determination was wrong. The reviewer is a contractor employee who
+    was not involved in the original decision and decides from the evidence submitted.
+  sources:
+    - {title: "CMS Medicare Physician Guide, chapter 7 (appeals)", url: "https://www.cms.hhs.gov/MLNProducts/downloads/chapter7.pdf"}
+    - {title: "CMS: first level of appeal, redetermination", url: "https://www.cms.gov/medicare/appeals-grievances/fee-for-service/first-level-appeal-redetermination-medicare-contractor"}
+  accessed: "2026-11-09"
+- id: PN-REOPEN-01
+  title: Clerical errors are fixed by reopening, not appeal
+  keywords: [reopening, clerical error, minor error, omission, transposed diagnosis code, data entry error, correct claim, coding error, diagnosis procedure]
+  text: >-
+    Clerical errors, including minor errors and omissions, are corrected through a reopening rather than a
+    formal appeal, and contractors must process them as reopenings. Examples include a transposed provider
+    number or diagnosis code, inaccurate data entry and computer errors. Failure to bill for a service is
+    not considered a minor error.
+  sources:
+    - {title: "CMS Claims Processing Manual, chapter 34 (reopenings)", url: "https://www.cms.gov/regulations-and-guidance/guidance/manuals/downloads/clm104c34"}
+    - {title: "42 CFR 405.980 (reopening)", url: "https://www.govinfo.gov/content/pkg/CFR-2011-title42-vol2/pdf/CFR-2011-title42-vol2-sec405-980.pdf"}
+    - {title: "First Coast: adjusting, reopening, cancelling and resubmitting claims", url: "https://medicare.fcso.com/claims/claims-adjusting-reopening-cancelling-and-resubmitting"}
+  accessed: "2026-11-09"
+- id: PN-REOPEN-02
+  title: Reopening time limits
+  keywords: [reopening timeframe, one year, four years, good cause, initial determination, correct claim later, adjustment]
+  text: >-
+    A claim determination can be reopened within one year of the initial determination for any reason, and
+    within four years of it when good cause is shown.
+  sources:
+    - {title: "CGS Medicare: clerical error reopening", url: "https://cgsmedicare.com/partb/pubs/news/2025/04/cope176398.html"}
+    - {title: "First Coast: adjusting, reopening, cancelling and resubmitting claims", url: "https://medicare.fcso.com/claims/claims-adjusting-reopening-cancelling-and-resubmitting"}
+  accessed: "2026-11-09"
+- id: PN-NECESS-01
+  title: Reasonable and necessary standard
+  keywords: [medical necessity, reasonable and necessary, section 1862, covered service, treatment, diagnosis, not necessary, CO-50]
+  text: >-
+    Under section 1862(a)(1)(A) of the Social Security Act, Medicare may pay only for items and services
+    that are reasonable and necessary for the diagnosis or treatment of illness or injury, or to improve the
+    function of a malformed body member. Services that do not meet that standard are not payable.
+  sources:
+    - {title: "Noridian: documentation and medical necessity review results", url: "https://med.noridianmedicare.com/web/jfa/cert-review/mr/review-results/diagnostic-cardiac-imaging-results-of-tpe-review"}
+    - {title: "Palmetto GBA: no documentation of medical necessity", url: "https://palmettogba.com/palmetto/jja.nsf/DID/G5DQNOR0MA"}
+  accessed: "2026-11-09"
+- id: PN-NECESS-02
+  title: Documentation needed to support medical necessity
+  keywords: [medical record, documentation, legible signature, covered indication, clinical notes, supporting records, medical necessity denial, records support]
+  text: >-
+    Medicare review contractors judge medical necessity from the documentation submitted with the claim.
+    Records should be complete and legible, show a covered condition or indication, support that the service
+    was actually rendered, and carry a legible provider signature. Denials for medical necessity often occur
+    because the records submitted do not show these things.
+  sources:
+    - {title: "Palmetto GBA: no documentation of medical necessity", url: "https://palmettogba.com/palmetto/jja.nsf/DID/G5DQNOR0MA"}
+    - {title: "CGS Medicare: documentation and signature requirements", url: "https://cgsmedicare.com/parta/pubs/news/2017/05/cope3166c.html"}
+    - {title: "Noridian: documentation to support medical necessity", url: "https://med.noridianmedicare.com/web/jfa/cert-review/mr/review-results/diagnostic-imaging-services-results-of-tpe-review"}
+  accessed: "2026-11-09"
+- id: PN-NCCI-01
+  title: National Correct Coding Initiative bundling edits
+  keywords: [NCCI, bundling, bundled, procedure to procedure, PTP edit, column one, column two, correct coding, unbundling, included in payment, CO-97]
+  text: >-
+    CMS developed the National Correct Coding Initiative to promote correct coding and prevent improper
+    payment. Procedure-to-procedure edits bundle component codes into a more comprehensive code, so when
+    both codes are billed together on the same date of service the column one code is payable and the
+    column two code is denied unless an exception applies.
+  sources:
+    - {title: "CMS: NCCI coding edits", url: "https://www.cms.gov/medicare/coding/ncci-coding-edits"}
+    - {title: "Palmetto GBA: NCCI procedure-to-procedure edits", url: "https://palmettogba.com/jmb/admin/tools/ncci"}
+    - {title: "CMS NCCI Policy Manual introduction", url: "https://www.cms.gov/files/document/ncci-policy-manual-2017-introduction.pdf"}
+  accessed: "2026-11-09"
+- id: PN-NCCI-02
+  title: NCCI modifier indicators and documentation
+  keywords: [modifier indicator, modifier 59, distinct service, exception, override edit, modifier allowed, documentation supports modifier, bundled code pair]
+  text: >-
+    Each NCCI code pair carries a modifier indicator. An indicator of 0 means the codes are always bundled
+    and no modifier can override the edit; 1 means an appropriate NCCI-associated modifier may be reported
+    when clinical circumstances justify it; 9 means the edit no longer applies. The patient's medical record
+    must document the circumstances that support any exception.
+  sources:
+    - {title: "Palmetto GBA: NCCI procedure-to-procedure edits", url: "https://palmettogba.com/jmb/admin/tools/ncci"}
+  accessed: "2026-11-09"
+- id: PN-PA-01
+  title: Prior authorization before the service and claim
+  keywords: [prior authorization, authorization, precertification, provisional affirmation, before service, claim denied without authorization, CO-197, UTN]
+  text: >-
+    In Medicare prior authorization programs, a request for provisional affirmation is submitted before the
+    service is furnished and before the claim is submitted. For services covered by a program, a claim sent
+    without a prior authorization decision and its tracking number is denied automatically, and appeal rights
+    are then available. Prior authorization applies only to the specific services named in each CMS program,
+    not to Medicare services in general.
+  sources:
+    - {title: "Noridian: Part A OPD prior authorization claim submission", url: "https://med.noridianmedicare.com/web/jfa/cert-reviews/pre-claim/part-a-opd-prior-authorization-claim-submission"}
+    - {title: "42 CFR 414.234 (prior authorization)", url: "https://www.law.cornell.edu/cfr/text/42/414.234"}
+    - {title: "CMS: prior authorization and pre-claim review initiatives", url: "https://www.cms.gov/research-statistics-data-and-systems/monitoring-programs/medicare-ffs-compliance-programs/pre-claim-review-initiatives/overview"}
+  accessed: "2026-11-09"
+- id: PN-PA-02
+  title: After a prior authorization non-affirmation
+  keywords: [non-affirmation, resubmit authorization, authorization request, appealable, initial determination, authorization denied, retrospective]
+  text: >-
+    If a prior authorization request is non-affirmed, the requester can fix the problems and resubmit it as
+    many times as needed before the claim is submitted; the non-affirmation itself cannot be appealed. If a
+    claim is submitted after a non-affirmation and the contractor denies it, that denial is an initial
+    determination that can be appealed.
+  sources:
+    - {title: "Noridian: Part A OPD prior authorization claim submission", url: "https://med.noridianmedicare.com/web/jfa/cert-reviews/pre-claim/part-a-opd-prior-authorization-claim-submission"}
+    - {title: "First Coast: hospital OPD prior authorization claim submission", url: "https://medicare.fcso.com/medical-review/prior-authorization-program-certain-hospital-outpatient-department-services-claim"}
+  accessed: "2026-11-09"
+- id: PN-ELIG-01
+  title: Verify eligibility before billing
+  keywords: [eligibility, HETS, coverage, entitlement, Part A, Part B, date of death, inactive coverage, verify eligibility, CO-27, covered on date of service]
+  text: >-
+    Providers should verify a patient's Medicare eligibility and entitlement status before or during the
+    service, and before billing, using the HIPAA Eligibility Transaction System (HETS) or the contractor's
+    portal. The eligibility response includes Part A and Part B entitlement dates and the date of death on
+    file, which is the evidence to attach when disputing a coverage denial.
+  sources:
+    - {title: "CMS Transmittal R1847OTN (verify eligibility before billing)", url: "https://cms.gov/Regulations-and-Guidance/Guidance/Transmittals/2017Downloads/R1847OTN.pdf"}
+    - {title: "CMS: HIPAA Eligibility Transaction System (HETS)", url: "https://security.cms.gov/pia/hipaa-eligibility-transaction-system"}
+    - {title: "CGS Medicare: checking beneficiary eligibility", url: "https://cgsmedicare.com/hhh/claims/checking_bene_eligibility.html"}
+  accessed: "2026-11-09"
+- id: PN-ROUTE-01
+  title: Claims sent to the wrong payer
+  keywords: [wrong payer, not covered by this payer, send to correct payer, coordination of benefits, other insurance, bill patient, misdirected claim]
+  text: >-
+    A claim sent to a payer or contractor that is not responsible for it comes back with a reason saying it
+    is not covered by that payer and that it must be sent to the correct one. This is a routing correction,
+    not an appeal.
+  sources:
+    - {title: "CMS Transmittal R2474CP (misdirected claims)", url: "https://cms.gov/regulations-and-guidance/guidance/transmittals/downloads/r2474cp.pdf"}
+  accessed: "2026-11-09"
+- id: PN-UNPROC-01
+  title: Unprocessable claims have no appeal rights
+  keywords: [unprocessable, MA130, CARC 16, missing information, incomplete claim, invalid information, no appeal rights, submit new claim, CO-16]
+  text: >-
+    A claim that is missing required information, or has invalid information, is returned as unprocessable
+    with reason code 16 and remark MA130. It is not treated as a denial, so no appeal rights apply; the
+    provider submits a new claim with complete and correct information.
+  sources:
+    - {title: "CMS Transmittal R13551CP", url: "https://www.cms.gov/files/document/R13551CP.pdf"}
+    - {title: "CMS MLN Matters JA5658", url: "https://www.cms.gov/Medicare/Medicare-Contracting/ContractorLearningResources/Downloads/JA5658.pdf"}
+  accessed: "2026-11-09"
+- id: PN-UNPROC-02
+  title: Do not appeal an unprocessable claim
+  keywords: [appeal unprocessable, delay payment, timely filing risk, refile, resubmit corrected claim, returned claim, return as unprocessable]
+  text: >-
+    Filing an appeal on a claim returned as unprocessable only delays payment and can lead to a timely-filing
+    denial if the corrected claim is not refiled within the filing period. The contractor returns such
+    appeals with instructions to submit a new claim.
+  sources:
+    - {title: "First Coast: claims returned as unprocessable", url: "https://medicare.fcso.com/appeals/what-you-should-do-claims-returned-unprocessable"}
+  accessed: "2026-11-09"
+- id: PN-UNPROC-03
+  title: Missing or invalid procedure code
+  keywords: [procedure code, missing procedure code, invalid procedure code, M51, claim submission tips, corrected claim, valid code for date of service, CO-4]
+  text: >-
+    When a procedure code is missing or invalid, Medicare asks the provider to submit a new claim with
+    corrected and complete information and notes that the claim is unprocessable with no appeal rights.
+    Providers should make sure the procedure code is appropriate and valid for the services and dates billed.
+  sources:
+    - {title: "Noridian: missing or incorrect required claim information", url: "https://med.noridianmedicare.com/web/jeb/topics/claim-submission/reason-code-guidance/missing-incorrect-req-claim-info"}
+  accessed: "2026-11-09"
+- id: PN-CARC4-01
+  title: Meaning of reason code 4
+  keywords: [CARC 4, modifier, inconsistent with modifier, required modifier missing, procedure code modifier, CO-4]
+  text: >-
+    Claim adjustment reason code 4 means the procedure code is inconsistent with the modifier used, or a
+    required modifier is missing.
+  sources:
+    - {title: "CMS Transmittal R1888CP", url: "https://www.cms.hhs.gov/transmittals/downloads/R1888CP.pdf"}
+  accessed: "2026-11-09"
+- id: PN-DUP-01
+  title: Wrongly identified duplicate claims
+  keywords: [duplicate claim, incorrectly identified duplicate, duplicate denial, reopening reason, CO-18, resubmission]
+  text: >-
+    Medicare's reopening process includes an adjustment reason for a claim that was incorrectly identified as
+    a duplicate, so a claim wrongly denied as a duplicate can be corrected through reopening rather than a
+    formal appeal.
+  sources:
+    - {title: "First Coast: automation of the reopening process", url: "https://medicare.fcso.com/billing/automation-request-reopening-claims-process"}
+  accessed: "2026-11-09"
