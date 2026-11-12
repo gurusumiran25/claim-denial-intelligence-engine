@@ -170,3 +170,11 @@ At each milestone the log gets an appended block (a short entry for the findings
 - A bug found on the way: the command-line `--drop` option was read but not passed to the training function, so the first "ablation" silently ran the full model. A test now runs the real command-line entry point.
 - Progress: about 62%. Next: Week 5 (root-cause analysis and the offline appeal copilot).
 - Correction (9 Nov 2026): the 74% quoted above for probability ranking at a 10% review share was the 21-feature model; the final 19-feature model gives 72%. See `docs/model_card.md`.
+
+## Update 12 Nov 2026: Week 5 (root cause and appeal copilot)
+- **Root cause (real run, 506,661 denied claims, $224.2M):** by count CO-16 30.3%, CO-29 24.0%, CO-197 12.6%; by dollars CO-197 35.4%, CO-50 18.0%, CO-29 15.2% (top three hold 68.6% of dollars). CO-50 and CO-197 average about $1,360 and $1,240 per denied claim against about $190 for CO-16, so manual appeal effort belongs on the high-dollar reasons and the high-volume low-dollar reasons are for upstream automation.
+- **Preventable vs correctable:** about 75% of denied dollars are preventable before submission (authorization, late filing, missing data, procedure code, eligibility) and about 25% correctable afterwards (documentation, diagnosis mismatch, bundling). By owner: front desk 35.4%, clinical documentation 18.0%, registration 16.5%, billing office 15.2%, coding 14.9%.
+- **Provider concentration:** among 101,623 providers with a denial, the top 1% hold 57.1% of denied dollars, the top 5% 80.6%, the top 10% 86.7%. This is driven mainly by volume and claim value, but several top providers also run well above the 10% average (for example 21.2% on 3,709 claims), so a ranking by excess denials is the better outreach list.
+- **Route by default playbook:** 70.2% of denied dollars appealable in principle (an upper bound, since evidence must be supplied by a person), 26.3% corrected claim, 3.5% no appeal.
+- **Copilot:** 20 sourced policy notes, 9 reasons in the playbook, 30 hand-written evaluation cases (`reports/rag_eval.md`). The cases share an author with the playbook, so they check the design, not an independent benchmark (ADR-015).
+- **Progress:** about 77%. Next: Week 6 (API, app, Docker, deploy).
